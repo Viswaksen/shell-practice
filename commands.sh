@@ -1,13 +1,17 @@
 #! /bin/bash
 
 USERID=$(id -u)
+R="\e[31m"
+B="\e[32m"
+Y="\e[33m"
+N="\e[0m"
 
 if [ $USERID -ne 0 ]
 then
-    echo "EROOR: Please run the script with root access"
+    echo -e "$R EROOR: Please run the script with root access $N"
     exit 1
 else
-    echo "You are running with root access"
+    echo -e "$B You are running with root access $N"
 fi
 
 VALIDATE(){
