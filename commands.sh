@@ -8,7 +8,7 @@ N="\e[0m"
 
 if [ $USERID -ne 0 ]
 then
-    echo -e "$R EROOR: Please run the script with root access $N"
+    echo -e "$R EROOR: Please run the script with root access Ok? $N"
     exit 1
 else
     echo -e "$B You are running with root access $N"
@@ -23,6 +23,7 @@ VALIDATE(){
         exit 1
     fi
 }
+
 
 dnf list instaled mysql
 
@@ -68,6 +69,3 @@ else
     echo "python3 is already installed"
     
 fi
-
-
-
