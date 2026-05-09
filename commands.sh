@@ -9,6 +9,7 @@ N="\e[0m"
 LOGS_FOLDER="/var/log/shellscript-logs"
 SCRIPT_NAME=$(echo $0 | cut -d "." -f1)
 LOG_FILE="$LOGS_FOLDER/$SCRIPT_NAME.log"
+PACKAGES=("mysql" "python3" "nginx")
 
 mkdir -p $LOGS_FOLDER
 echo "Script started executing at: $(date)" &>>$LOG_FILE
@@ -31,48 +32,21 @@ VALIDATE(){
     fi
 }
 
+for PACKAGE in ${PACKAGES[@]}
+do
+    dnf list instaled $PACKAGE &>>$LOG_FILE
 
-dnf list instaled mysql &>>$LOG_FILE
+    if [ $? -ne 0 ]
+    then 
+        echo "$PACKAGE is not installed.....going to install" | tee -a $LOG_FILE
 
-if [ $? -ne 0 ]
-then 
-    echo "Mysql is not installed.....going to install" | tee -a $LOG_FILE
+        dnf install $PACKAGE -y &>>$LOG_FILE
 
-    dnf install mysql -y &>>$LOG_FILE
+         VALIDATE $? "$PACKAGE"
 
-   VALIDATE $? "mysql"
+    else
+        echo "Mysql is already installed" | tee -a $LOG_FILE
+        
+    fi 
 
-else
-    echo "Mysql is already installed" | tee -a $LOG_FILE
-    
-fi 
-
-dnf list instaled nginx &>>$LOG_FILE
-
-if [ $? -ne 0 ]
-then 
-    echo "nginx is not installed.....going to install" | tee -a $LOG_FILE
-
-    dnf install nginx -y &>>$LOG_FILE
-
-    VALIDATE $? "nginx"
-else
-    echo "nginx is already installed" | tee -a $LOG_FILE
-    
-fi
-
-
-dnf list instaled python3 &>>$LOG_FILE
-
-if [ $? -ne 0 ]
-then 
-    echo "python3 is not installed.....going to install" | tee -a $LOG_FILE
-
-    dnf install python3 -y &>>$LOG_FILE
-
-    VALIDATE $? "python3"
-
-else
-    echo "python3 is already installed" | tee -a $LOG_FILE
-    
-fi
+done
